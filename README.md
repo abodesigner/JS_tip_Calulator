@@ -1,1 +1,1 @@
-# this is just simple todo project using pure javascript
+# This is just simple todo project using pure javascript
