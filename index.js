@@ -5,7 +5,31 @@ let messageContainer = document.getElementById('alert-message');
 let listItem = document.querySelector('.list');
 let clearBtn = document.querySelector('.clear-item');
 
-let itemData = [];
+//let itemData = [];
+
+let itemData = JSON.parse(localStorage.getItem("myList")) || [];
+
+if( itemData.length > 0){
+    itemData.forEach(function(singleItem){
+        listItem.insertAdjacentHTML('beforeend', `
+
+        <div class="item">
+        <h5 class="item-name">${singleItem}</h5>
+            <div class="items-icons">
+                <a href="#" class="complete-item item-icon"><i class="far fa-check-circle"></i></a>
+                <a href="#" class="edit-item item-icon"><i class="far fa-edit"></i></a>
+                <a href="#" class="delete-item item-icon"><i class="far fa-times-circle"></i></a>
+            </div>
+        </div>
+
+
+        `);
+    });
+}
+
+
+
+
 let content;
 
 itemForm.addEventListener("submit", e => {
@@ -17,8 +41,9 @@ itemForm.addEventListener("submit", e => {
     } else {
         addItem(textValue);
         itemData.push(textValue);
-        //console.log(items);
+
         //localStorage
+        localStorage.setItem("myList", JSON.stringify(itemData));
 
         handleItem(textValue);
     }
@@ -78,6 +103,7 @@ function handleItem(textValue) {
                 return item !== textValue;
             })
 
+            localStorage.setItem("myList", JSON.stringify(itemData));
         });
 
         // addEventListener to delete-icon
@@ -91,6 +117,7 @@ function handleItem(textValue) {
                 return item !== textValue;
             })
 
+            localStorage.setItem("myList", JSON.stringify(itemData));
             showMessage("Item successfully deleted", "success");
         });
 
@@ -100,7 +127,8 @@ function handleItem(textValue) {
 
 // clear button
 clearBtn.addEventListener("click", function(){
-
+    itemData = [];
+    localStorage.removeItem("myList");
     const items = listItem.querySelectorAll('.item');
     if(items.length > 0){
         items.forEach(function(item){
