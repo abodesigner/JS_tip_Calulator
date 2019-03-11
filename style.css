@@ -25,7 +25,8 @@ html, body {
 }
 
 .todo form input{
-    width: 80%
+    width: 80%;
+    border-radius: 5px;
 }
 
 .list{
@@ -37,9 +38,10 @@ html, body {
 }
 
 .list .item{
-    border: 2px solid #00BCD4;
+    border: 1px solid #00BCD4;
     padding: 5px;
     border-radius: 5px;
+    background-color: #ffeb3b6b;
 }
 
 .show{
@@ -64,10 +66,32 @@ html, body {
  line-height: 35px
 }
 
+.visibility{
+    opacity: 0.5;
+}
+
 .items-icons a{
     margin-right: 5px
 }
 
-.fa-trash{
+.fa-times-circle{
     color: #da3636
+}
+
+.showItem{
+    font-size: 4rem
+}
+
+.completed{
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+.todo .btn-default{
+    transition: all 0.3s ease-in-out;
+}
+.todo .btn-default:hover{
+    color: #fff;
+    background-color: #d20505
+
 }
