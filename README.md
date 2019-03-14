@@ -1,1 +1,1 @@
-# This is just simple todolist using Vanillia javascript.
+# This is a todolist project using Vanillia javascript.
