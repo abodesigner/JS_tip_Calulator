@@ -1,97 +1,39 @@
-html, body {
-    margin: 0;
-    padding: 0;
-}
-
-.todo{
-    margin: 50px auto 30px;
-    text-align: center;
-    padding: 15px;
-    width: 50%
-}
-
-.todo h2{
-    margin-bottom: 20px
-}
-
-.todo .formContent{
-    /* border: 1px solid #444; */
-    padding: 15px
-}
-
-.todo form{
-    display: flex;
-    justify-content: space-evenly;
-}
-
-.todo form input{
-    width: 80%;
-    border-radius: 5px;
-}
-
-.list{
-    /* border:1px solid #080; */
-    padding: 15px;
-    border-radius:5px;
+.wrapper{
     width: 50%;
-    margin: 0 auto;
-}
-
-.list .item{
-    border: 1px solid #00BCD4;
-    padding: 5px;
-    border-radius: 5px;
-    background-color: #ffeb3b6b;
-}
-
-.show{
-    padding: 20px;
-    border-left: 5px solid red;
-    font-size: 3rem;
-    text-align: center;
     margin: 50px auto
 }
 
-.hide{
+.result,.loader,.showMessage{
     display: none
 }
 
-.item{
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px
+.showMessage{
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 20px;
+    font-size: 3rem;
 }
 
-.items-icons{
- line-height: 35px
+.error{
+    border: 1px solid #f00;
+    background-color: #f5abab;
+    border-left: 5px solid #f00;
+    border-radius: 5px;
 }
 
-.visibility{
-    opacity: 0.5;
+.success{
+    border: 1px solid #080;
+    background-color: aquamarine;
+    border-left: 5px solid #080;
+    border-radius: 5px;
 }
 
-.items-icons a{
-    margin-right: 5px
-}
-
-.fa-times-circle{
-    color: #da3636
+#main-panel .panel-title{
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: bold
 }
 
 .showItem{
-    font-size: 4rem
-}
-
-.completed{
-    text-decoration: line-through;
-    opacity: 0.5;
-}
-
-.todo .btn-default{
-    transition: all 0.3s ease-in-out;
-}
-.todo .btn-default:hover{
-    color: #fff;
-    background-color: #d20505
-
+    display: block
 }

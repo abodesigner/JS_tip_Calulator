@@ -1,141 +1,109 @@
-// get elements
-let itemForm = document.getElementById('itemForm');
-let itemInput = document.getElementById('itemInput');
-let messageContainer = document.getElementById('alert-message');
-let listItem = document.querySelector('.list');
-let clearBtn = document.querySelector('.clear-item');
+//populate values from array of objects to select element
+(function (){
+    // create services array of objects
+    const services = [{
+            value: 1,
+            title: "great- 20%"
+        },
+        {
+            value: 2,
+            title: "ok   - 10%"
+        },
+        {
+            value: 3,
+            title: "bad  - 2%"
+        }
+    ];
 
-//let itemData = [];
+    // loop through services using forEach
+    services.forEach(function(service){
+        const option = document.createElement('option');
+        option.textContent = service.title;
+        option.value = service.value;
 
-let itemData = JSON.parse(localStorage.getItem("myList")) || [];
-
-if( itemData.length > 0){
-    itemData.forEach(function(singleItem){
-        listItem.insertAdjacentHTML('beforeend', `
-
-        <div class="item">
-        <h5 class="item-name">${singleItem}</h5>
-            <div class="items-icons">
-                <a href="#" class="complete-item item-icon"><i class="far fa-check-circle"></i></a>
-                <a href="#" class="edit-item item-icon"><i class="far fa-edit"></i></a>
-                <a href="#" class="delete-item item-icon"><i class="far fa-times-circle"></i></a>
-            </div>
-        </div>
-
-
-        `);
+        // grab the parent element, then append the option child
+        const selectElement = document.getElementById('input-service');
+        selectElement.appendChild(option);
     });
-}
 
+    // get all values from form
+    const form = document.getElementById('tip-form');
+    const amount = document.getElementById('input-amount');
+    const users = document.getElementById('input-users');
+    const service = document.getElementById('input-service');
 
+    // customer feedback
+    const feedback = document.querySelector('.showMessage');
+    const loader = document.querySelector('.loader');
+    const result = document.querySelector('.result');
 
+    // submit form
+    form.addEventListener("submit", function(e){
+        e.preventDefault();
 
-let content;
+        let bill = amount.value;
+        let people = users.value;
+        let quality = service.value;
 
-itemForm.addEventListener("submit", e => {
-    e.preventDefault();
-    let textValue = itemInput.value;
-    // check for empty values
-    if (textValue === "") {
-        showMessage("Please enter a valid input", "danger");
-    } else {
-        addItem(textValue);
-        itemData.push(textValue);
+        // validate input fields
+        if( bill === '' || people === '' || quality === '0'){
+            feedback.classList.add('showItem','error');
+            feedback.innerHTML = `<p>Empty Values</p>`;
 
-        //localStorage
-        localStorage.setItem("myList", JSON.stringify(itemData));
+            setTimeout(function(){
+                feedback.classList.remove('showItem');
+            }, 2000);
+        } else if (bill <= '0' || people <= '0') {
+            feedback.classList.add('showItem','alert-danger');
+            feedback.innerHTML = `<p>Values should be greater than zero</p>`;
 
-        handleItem(textValue);
-    }
-})
+            setTimeout(function(){
+                feedback.classList.remove('showItem');
+            }, 2000);
+        } else {
+            feedback.classList.add('showItem','success');
+            feedback.innerHTML = 'calculating ....';
+            loader.classList.add('showItem');
 
-//showMessage function
-function showMessage(text, type) {
-    messageContainer.classList.add("show", `alert-${type}`);
-    messageContainer.innerHTML = `<p>${text}</p>`;
+            setTimeout( function(){
+                feedback.classList.remove('showItem','success');
+                loader.classList.remove('showItem');
 
-    setTimeout(() => {
-        messageContainer.classList.remove("show", `alert-${type}`);
-        messageContainer.classList.add("hide");
-    }, 5000)
-}
+                showResults(bill, people, quality);
+                resetForm();
 
-function addItem(itemText) {
-    const itemDiv = document.createElement('div');
-    itemDiv.classList.add('item');
-    itemDiv.innerHTML = `<h5 class="item-name">${itemText}</h5>
-                        <div class="items-icons">
-                            <a href="#" class="complete-item item-icon"><i class="far fa-check-circle"></i></a>
-                            <a href="#" class="edit-item item-icon"><i class="far fa-edit"></i></a>
-                            <a href="#" class="delete-item item-icon"><i class="far fa-times-circle"></i></a>
-                        </div>`;
-
-
-    listItem.appendChild(itemDiv);
-
-    itemInput.value = "";
-}
-
-
-function handleItem(textValue) {
-
-    const items = listItem.querySelectorAll('.item');
-
-    items.forEach(function (item) {
-        // addEventListener to complete-icon
-        item.querySelector('.complete-item').addEventListener("click", function (e) {
-            e.preventDefault();
-            item.querySelector(".item-name").classList.toggle('completed');
-            this.classList.toggle('visibility');
-        });
-
-
-        // addEventListener to edit-icon
-        item.querySelector('.edit-item').addEventListener('click', function (e) {
-
-            e.preventDefault();
-
-            itemInput.value = textValue;
-
-            document.querySelector('.list').removeChild(item);
-
-            itemData = itemData.filter(function (item) {
-                return item !== textValue;
-            })
-
-            localStorage.setItem("myList", JSON.stringify(itemData));
-        });
-
-        // addEventListener to delete-icon
-        item.querySelector('.delete-item').addEventListener('click', function (e) {
-
-            e.preventDefault();
-
-            document.querySelector('.list').removeChild(item);
-
-            itemData = itemData.filter(function (item) {
-                return item !== textValue;
-            })
-
-            localStorage.setItem("myList", JSON.stringify(itemData));
-            showMessage("Item successfully deleted", "success");
-        });
-
-
+            }, 3000)
+        }
     });
-}
 
-// clear button
-clearBtn.addEventListener("click", function(){
-    itemData = [];
-    localStorage.removeItem("myList");
-    const items = listItem.querySelectorAll('.item');
-    if(items.length > 0){
-        items.forEach(function(item){
-            listItem.removeChild(item);
-        });
 
-    } else {
-        showMessage("There is no items",'danger');
+
+    function showResults(bill, people, quality){
+        let percent = 0;
+        if(quality === '1'){
+            percent = 0.2;
+        } else if(quality === '2'){
+            percent = 0.1;
+        } else if(quality === '3'){
+            percent = 0.02;
+        }
+
+        let tipAmount = parseInt(bill) * percent;
+        let total = parseInt(bill) + tipAmount;
+        let person = total / parseInt(people);
+
+        result.classList.add('showItem');
+
+        document.getElementById('tip-amount').textContent = tipAmount;
+        document.getElementById('total-amount').textContent = total;
+        document.getElementById('person-amount').textContent = person;
+
     }
-});
+
+    function resetForm(){
+        amount.value = "";
+        users.value = "";
+        service.value = "";
+    }
+
+})();
